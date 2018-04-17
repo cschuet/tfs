@@ -9,6 +9,7 @@ exports_files(
       "bigtable_table_admin.grpc.pb.h",
       "bigtable_instance_admin.grpc.pb.cc",
       "bigtable_instance_admin.grpc.pb.h",
+      "build_info.cc",
       "version_info.h",	
    ],
    visibility = ["//visibility:public"],

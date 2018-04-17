@@ -5,6 +5,13 @@ package(
 licenses(["notice"])
 
 genrule(
+    name = "build_info_cc",
+    srcs = ["@com_github_cschuet_tfs//bazel/google_cloud_cpp/generated:build_info.cc"],
+    outs = ["bigtable/client/build_info.cc"],
+    cmd = "cp $< $@",
+)
+
+genrule(
     name = "version_info_h",
     srcs = ["@com_github_cschuet_tfs//bazel/google_cloud_cpp/generated:version_info.h"],
     outs = ["bigtable/client/version_info.h"],
@@ -70,21 +77,22 @@ cc_library(
 	  "**/*_test.cc",
 	],
     ) + [
-        ":bigtable_grpc_pb_cc",
-        ":bigtable_table_admin_grpc_pb_cc",
-	":bigtable_instance_admin_grpc_pb_cc",
+	"bigtable/client/build_info.cc",
+	"google/bigtable/v2/bigtable.grpc.pb.cc",
+        "google/bigtable/admin/v2/bigtable_table_admin.grpc.pb.cc",
+	"google/bigtable/admin/v2/bigtable_instance_admin.grpc.pb.cc",
     ],
-    hdrs = glob(
+    hdrs = [
+        "google/bigtable/admin/v2/bigtable_table_admin.grpc.pb.h",
+	"google/bigtable/v2/bigtable.grpc.pb.h",
+	"google/bigtable/v2/bigtable_mock.grpc.pb.h",
+	"google/bigtable/admin/v2/bigtable_instance_admin.grpc.pb.h",
+	"bigtable/client/version_info.h",
+    ] + glob(
         [
             "bigtable/client/**/*.h",
         ],
-    ) + [
-        ":bigtable_table_admin_grpc_pb_h",
-	":bigtable_grpc_pb_h",
-	":bigtable_mock_grpc_pb_h",
-	":bigtable_instance_admin_grpc_pb_h",
-	":version_info_h",
-    ],
+    ),
     deps = [
         "@com_github_googleapis_googleapis//:lala",
 	"@com_github_grpc_grpc//:grpc++",
